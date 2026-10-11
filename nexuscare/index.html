@@ -1,0 +1,849 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NexusCare — Next-Gen Hospital Operations & Patient-Flow Engine</title>
+  
+  <!-- Modern Clean Typography (Google Fonts Plus Jakarta Sans & JetBrains Mono) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <!-- Ambient background lighting -->
+  <div class="ambient-bg"></div>
+
+  <!-- Toast Notification Stack -->
+  <div id="toast-container" class="toast-stack"></div>
+
+  <div id="app">
+    <!-- ==========================================================================
+         Top Navigation Header Bar
+         ========================================================================== -->
+    <header class="top-header">
+      <div class="header-brand" title="Return to Landing Overview">
+        <div class="brand-icon-box">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 2v20M2 12h20M4.93 4.93l14.14 14.14M4.93 19.07l14.14-14.14"/>
+          </svg>
+        </div>
+        <div class="brand-title">
+          <span>NexusCare</span>
+          <span class="brand-badge">Clinical OS v2.4</span>
+        </div>
+      </div>
+
+      <div class="header-status-pill">
+        <div class="live-indicator-dot"></div>
+        <span>Metro Medical Grid • 42 Nodes Nominal</span>
+      </div>
+
+      <div class="header-actions">
+        <button id="header-sound-toggle" class="btn-icon-pill" title="Toggle Sound Synthesizer">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+            <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/>
+          </svg>
+          Audio ON
+        </button>
+
+        <button id="header-sim-toggle" class="btn-icon-pill active" title="Toggle Live Patient Flow Telemetry">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+          </svg>
+          Live Sim
+        </button>
+
+        <button id="header-quick-triage" class="btn-primary-pill">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <circle cx="12" cy="12" r="10"/>
+            <line x1="12" y1="8" x2="12" y2="12"/>
+            <line x1="12" y1="16" x2="12.01" y2="16"/>
+          </svg>
+          Rapid Triage
+        </button>
+      </div>
+    </header>
+
+    <!-- ==========================================================================
+         VIEW 1: Landing Hero Experience
+         ========================================================================== -->
+    <main id="hero-view" class="hero-section">
+      <div class="hero-pill-tag">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+        </svg>
+        <span>Hospital Operations & Intelligent Patient-Flow Ecosystem</span>
+      </div>
+
+      <h1 class="hero-title">
+        Orchestrating Hospital Flow with <br>
+        <span class="gradient-text-lavender">Real-Time Clinical Precision</span> & 
+        <span class="gradient-text-mint">Zero Wait Bottlenecks</span>
+      </h1>
+
+      <p class="hero-subtitle">
+        Eliminating emergency triage congestion, synchronizing ICU bed capacity, and empowering patients with interactive anatomical symptom guidance, live token dispensing, and architectural indoor wayfinding.
+      </p>
+
+      <div class="hero-cta-group">
+        <button id="hero-explore-btn" class="btn-hero-primary">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <rect x="3" y="3" width="7" height="7"/>
+            <rect x="14" y="3" width="7" height="7"/>
+            <rect x="14" y="14" width="7" height="7"/>
+            <rect x="3" y="14" width="7" height="7"/>
+          </svg>
+          Explore Operations Dashboard
+        </button>
+
+        <button id="hero-triage-btn" class="btn-hero-secondary">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+          </svg>
+          Body Symptom Checker
+        </button>
+
+        <button id="hero-map-btn" class="btn-hero-secondary">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/>
+            <line x1="8" y1="2" x2="8" y2="18"/>
+            <line x1="16" y1="6" x2="16" y2="22"/>
+          </svg>
+          Hospital Navigation Map
+        </button>
+      </div>
+
+      <!-- Live Telemetry KPI Preview Grid -->
+      <div class="hero-preview-grid">
+        <div class="hero-stat-card" data-target-view="dashboard" style="--card-accent: var(--lavender-300);">
+          <div class="hero-stat-header">
+            <span class="hero-stat-title">Bed Occupancy</span>
+            <span class="card-icon-tag">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 4v16M2 8h18a2 2 0 0 1 2 2v10M2 17h20M6 8v9"/></svg>
+            </span>
+          </div>
+          <div class="hero-stat-value">2,125 Beds</div>
+          <div class="hero-stat-footer">
+            <span class="patient-badge-trend">75% Occupied</span>
+            <span>Across 4 Hospital Wings</span>
+          </div>
+        </div>
+
+        <div class="hero-stat-card" data-target-view="tokens" style="--card-accent: var(--mint-400);">
+          <div class="hero-stat-header">
+            <span class="hero-stat-title">Average Wait Time</span>
+            <span class="card-icon-tag" style="color: var(--mint-400);">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            </span>
+          </div>
+          <div class="hero-stat-value">11.4 min</div>
+          <div class="hero-stat-footer">
+            <span class="patient-badge-trend">-38% vs Traditional ER</span>
+            <span>Smart Token Queue</span>
+          </div>
+        </div>
+
+        <div class="hero-stat-card" data-target-view="triage" style="--card-accent: var(--pink-300);">
+          <div class="hero-stat-header">
+            <span class="hero-stat-title">Anatomical Triage</span>
+            <span class="card-icon-tag" style="color: var(--pink-300);">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg>
+            </span>
+          </div>
+          <div class="hero-stat-value">8 Body Zones</div>
+          <div class="hero-stat-footer">
+            <span class="patient-badge-trend">Instant Department Routing</span>
+            <span>Pain-Score Triage</span>
+          </div>
+        </div>
+
+        <div class="hero-stat-card" data-target-view="map" style="--card-accent: var(--amber-300);">
+          <div class="hero-stat-header">
+            <span class="hero-stat-title">Architectural Wayfinding</span>
+            <span class="card-icon-tag" style="color: var(--amber-300);">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg>
+            </span>
+          </div>
+          <div class="hero-stat-value">4 Floors • 36 Rooms</div>
+          <div class="hero-stat-footer">
+            <span class="patient-badge-trend">Wheelchair Accessible</span>
+            <span>Turn-by-turn routing</span>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- ==========================================================================
+         VIEW 2: Operations Dashboard (Inspired by Reference Image)
+         ========================================================================== -->
+    <section id="dashboard-view" class="view-container hidden">
+      <div class="view-header">
+        <div class="view-header-title-wrap">
+          <h2 class="view-main-title">Healthcare Performance</h2>
+          <span class="view-sub-title">St. Jude Metropolitan Medical Grid • Real-time clinical throughput and capacity</span>
+        </div>
+
+        <!-- Filter Pills Bar (Faithful to Reference Image) -->
+        <div class="filter-pills-row">
+          <button class="filter-pill dashboard-filter-pill active" data-filter="occupancy">Occupancy</button>
+          <button class="filter-pill dashboard-filter-pill" data-filter="turnover">Turnover</button>
+          <button class="filter-pill dashboard-filter-pill" data-filter="efficiency">Efficiency</button>
+          <button class="filter-pill dashboard-filter-pill" data-filter="emergency">Emergency Flow</button>
+          <button class="filter-pill dashboard-filter-pill" data-filter="staffing">Staffing</button>
+        </div>
+      </div>
+
+      <!-- Dashboard Cards Grid -->
+      <div class="dashboard-grid">
+        
+        <!-- CARD 1: Number of Beds (Spans 4 columns) -->
+        <div class="dash-card card-beds">
+          <div class="card-title-bar">
+            <span class="card-label">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 4v16M2 8h18a2 2 0 0 1 2 2v10M2 17h20M6 8v9"/></svg>
+              Number of beds
+            </span>
+            <span class="card-meta-tag">All Wings</span>
+          </div>
+          <div class="beds-display-wrapper">
+            <div class="beds-count-area">
+              <span class="beds-count-sub">for all time</span>
+              <div class="beds-count-huge">2,125</div>
+              <div style="font-size: 0.78rem; color: var(--mint-300); display: flex; align-items: center; gap: 4px;">
+                <span>● 531 Available</span>
+                <span style="color: var(--text-muted);">| 1,594 In Use</span>
+              </div>
+            </div>
+            <!-- Miniature Dot Matrix Visual -->
+            <div class="beds-mini-matrix">
+              <div class="beds-mini-dot"></div><div class="beds-mini-dot"></div><div class="beds-mini-dot"></div>
+              <div class="beds-mini-dot"></div><div class="beds-mini-dot empty"></div><div class="beds-mini-dot"></div>
+              <div class="beds-mini-dot empty"></div><div class="beds-mini-dot"></div><div class="beds-mini-dot"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- CARD 2: Bed Occupancy Radial Dial & Striped Pills (Spans 4 columns) -->
+        <div class="dash-card card-occupancy">
+          <div class="card-title-bar">
+            <span class="card-label">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+              bed occupancy
+            </span>
+            <span class="card-meta-tag">Real-time</span>
+          </div>
+          <div class="occupancy-dial-container">
+            <div class="dial-svg-wrap">
+              <div id="occupancy-dial-svg"></div>
+              <div id="occupancy-percent-text" class="dial-inner-text">75%</div>
+            </div>
+            <!-- Striped Pills for Critical Wings -->
+            <div class="striped-pill-stack">
+              <div class="pill-bar-item">
+                <div class="pill-bar-info">
+                  <span>ICU Wing</span>
+                  <strong style="color: var(--pink-300);">92%</strong>
+                </div>
+                <div class="striped-pill-track">
+                  <div class="striped-pill-fill striped-fill-pink" style="width: 92%;"></div>
+                </div>
+              </div>
+
+              <div class="pill-bar-item">
+                <div class="pill-bar-info">
+                  <span>Emergency</span>
+                  <strong style="color: var(--mint-300);">84%</strong>
+                </div>
+                <div class="striped-pill-track">
+                  <div class="striped-pill-fill striped-fill-mint" style="width: 84%;"></div>
+                </div>
+              </div>
+
+              <div class="pill-bar-item">
+                <div class="pill-bar-info">
+                  <span>General Ward</span>
+                  <strong style="color: var(--lavender-300);">68%</strong>
+                </div>
+                <div class="striped-pill-track">
+                  <div class="striped-pill-fill striped-fill-lavender" style="width: 68%;"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- CARD 3: Current Patients & Density Matrix (Spans 4 columns) -->
+        <div class="dash-card card-patients">
+          <div class="card-title-bar">
+            <span class="card-label">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+              Current patients
+            </span>
+            <span class="card-meta-tag">Admitted</span>
+          </div>
+          <div class="patients-card-content">
+            <div class="patient-numbers">
+              <span class="patient-month-sub">This month</span>
+              <div class="patient-huge-val">1,583</div>
+              <span class="patient-badge-trend">+12.4% Net Flow</span>
+            </div>
+            <!-- Density Grid Matrix (Faithful to Reference) -->
+            <div class="dot-matrix-container">
+              <div class="matrix-dot mint"></div><div class="matrix-dot mint"></div><div class="matrix-dot lavender"></div><div class="matrix-dot"></div><div class="matrix-dot lavender"></div><div class="matrix-dot mint"></div>
+              <div class="matrix-dot mint"></div><div class="matrix-dot"></div><div class="matrix-dot mint"></div><div class="matrix-dot mint"></div><div class="matrix-dot"></div><div class="matrix-dot lavender"></div>
+              <div class="matrix-dot lavender"></div><div class="matrix-dot pink"></div><div class="matrix-dot"></div><div class="matrix-dot mint"></div><div class="matrix-dot mint"></div><div class="matrix-dot mint"></div>
+              <div class="matrix-dot"></div><div class="matrix-dot mint"></div><div class="matrix-dot lavender"></div><div class="matrix-dot lavender"></div><div class="matrix-dot"></div><div class="matrix-dot mint"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- CARD 4: Patients Activity Weekly Chart (Spans 4 columns) -->
+        <div class="dash-card card-activity">
+          <div class="card-title-bar">
+            <span class="card-label">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+              Patients Activity
+            </span>
+            <span class="card-meta-tag">Weekly</span>
+          </div>
+          <!-- Weekly Striped Pillar Bars (Monday to Sunday) -->
+          <div class="chart-bars-wrap">
+            <div class="bar-col" onclick="showToast('Saturday Admissions: 184 Patients')">
+              <div class="bar-body" style="height: 52%;"><span class="bar-tag-top">18%</span></div>
+              <span class="bar-label">Sat</span>
+            </div>
+            <div class="bar-col" onclick="showToast('Sunday Admissions: 210 Patients')">
+              <div class="bar-body" style="height: 68%;"><span class="bar-tag-top">22%</span></div>
+              <span class="bar-label">Sun</span>
+            </div>
+            <div class="bar-col" onclick="showToast('Monday Admissions: 312 Patients')">
+              <div class="bar-body" style="height: 94%;"><span class="bar-tag-top">30%</span></div>
+              <span class="bar-label">Mon</span>
+            </div>
+            <div class="bar-col" onclick="showToast('Tuesday Admissions: 245 Patients')">
+              <div class="bar-body" style="height: 78%;"><span class="bar-tag-top">25%</span></div>
+              <span class="bar-label">Tue</span>
+            </div>
+            <div class="bar-col" onclick="showToast('Wednesday Admissions: 290 Patients')">
+              <div class="bar-body" style="height: 88%;"><span class="bar-tag-top">28%</span></div>
+              <span class="bar-label">Wed</span>
+            </div>
+            <div class="bar-col" onclick="showToast('Thursday Admissions: 260 Patients')">
+              <div class="bar-body" style="height: 80%;"><span class="bar-tag-top">26%</span></div>
+              <span class="bar-label">Thu</span>
+            </div>
+            <div class="bar-col" onclick="showToast('Friday Admissions: 220 Patients')">
+              <div class="bar-body" style="height: 72%;"><span class="bar-tag-top">23%</span></div>
+              <span class="bar-label">Fri</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- CARD 5: Average Treatment Costs Spline Curve (Spans 4 columns) -->
+        <div class="dash-card card-costs">
+          <div class="card-title-bar">
+            <span class="card-label">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+              Average Treatment Costs
+            </span>
+            <div class="filter-pills-row" style="gap: 4px;">
+              <button class="filter-pill period-pill active" data-period="age" style="padding: 2px 8px; font-size: 0.72rem;">Age group</button>
+              <button class="filter-pill period-pill" data-period="month" style="padding: 2px 8px; font-size: 0.72rem;">Monthly</button>
+            </div>
+          </div>
+          <div id="costs-spline-svg" class="costs-chart-wrap"></div>
+          <div class="costs-bottom-info">
+            <div class="costs-main-val">$8,520</div>
+            <span class="costs-val-desc">Costs For All Ages</span>
+          </div>
+        </div>
+
+        <!-- CARD 6: Follow-up Rate By Department Constellation Graph (Spans 4 columns) -->
+        <div class="dash-card card-followup">
+          <div class="card-title-bar">
+            <span class="card-label">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+              Follow up rate By Department
+            </span>
+            <span class="card-meta-tag">Network</span>
+          </div>
+          <div id="constellation-svg" class="constellation-wrap"></div>
+        </div>
+
+        <!-- CARD 7: Patient Satisfaction & Mood History (Spans 4 columns) -->
+        <div class="dash-card card-satisfaction">
+          <div class="card-title-bar">
+            <span class="card-label">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>
+              Patient satisfaction
+            </span>
+            <span class="card-meta-tag">Weekly Review</span>
+          </div>
+          <div class="satisfaction-arc-wrap">
+            <div id="satisfaction-arc-svg" class="arc-svg-container"></div>
+            <div class="arc-center-stat">
+              <div id="satisfaction-percent-val" class="satisfaction-huge-percent">81%</div>
+              <span class="satisfaction-trend-sub">(+3%) change previous Week</span>
+            </div>
+          </div>
+          <!-- Weekly Mood History Row (Faithful to Reference) -->
+          <div class="mood-history-header">
+            <span class="mood-history-title">Weekly mood history</span>
+            <span style="font-size: 0.72rem; color: var(--text-muted);">Last 7 Days</span>
+          </div>
+          <div class="mood-emoji-row">
+            <div class="mood-day-col">
+              <button class="mood-icon-btn" data-day="Saturday" data-score="88%" data-comment="Fast registration at OPD desk">😊</button>
+              <span class="mood-day-label">Sat</span>
+            </div>
+            <div class="mood-day-col">
+              <button class="mood-icon-btn" data-day="Sunday" data-score="92%" data-comment="Compassionate emergency nurses">🥰</button>
+              <span class="mood-day-label">Sun</span>
+            </div>
+            <div class="mood-day-col">
+              <button class="mood-icon-btn" data-day="Monday" data-score="78%" data-comment="Morning queue was slight busy">😐</button>
+              <span class="mood-day-label">Mon</span>
+            </div>
+            <div class="mood-day-col">
+              <button class="mood-icon-btn" data-day="Tuesday" data-score="85%" data-comment="Cardiology test results delivered quickly">🙂</button>
+              <span class="mood-day-label">Tues</span>
+            </div>
+            <div class="mood-day-col">
+              <button class="mood-icon-btn" data-day="Wednesday" data-score="94%" data-comment="Super clean rooms and escort service">😃</button>
+              <span class="mood-day-label">Weds</span>
+            </div>
+            <div class="mood-day-col">
+              <button class="mood-icon-btn" data-day="Thursday" data-score="81%" data-comment="Smooth pharmacy collection">😊</button>
+              <span class="mood-day-label">Thus</span>
+            </div>
+            <div class="mood-day-col">
+              <button class="mood-icon-btn" data-day="Friday" data-score="90%" data-comment="Excellent doctor communication">🤩</button>
+              <span class="mood-day-label">Fri</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+         VIEW 3: Interactive Anatomical Body Navigator & Symptom Triage
+         ========================================================================== -->
+    <section id="triage-view" class="view-container hidden">
+      <div class="view-header">
+        <div class="view-header-title-wrap">
+          <h2 class="view-main-title">Interactive Anatomical Symptom Triage</h2>
+          <span class="view-sub-title">Click your affected body region to diagnose symptom tier and direct to the exact medical department</span>
+        </div>
+      </div>
+
+      <div class="triage-container">
+        <!-- Left: Interactive Vector Anatomical Body -->
+        <div class="anatomical-figure-card">
+          <div class="figure-controls-bar">
+            <span style="font-size: 0.82rem; font-weight: 700; color: var(--text-secondary);">Anatomical Model</span>
+            <div class="figure-view-toggle">
+              <button class="view-btn body-view-btn active" data-view="front">Anterior (Front)</button>
+              <button class="view-btn body-view-btn" data-view="back">Posterior (Back)</button>
+            </div>
+          </div>
+
+          <div id="anatomical-body-svg" class="svg-body-canvas"></div>
+          <span style="font-size: 0.72rem; color: var(--text-muted); margin-top: 0.75rem;">
+            Tip: Click Head, Chest, Abdomen, Spine, Pelvis, or Limbs
+          </span>
+        </div>
+
+        <!-- Right: Triage Evaluation Panel -->
+        <div class="triage-details-card">
+          <div class="triage-zone-header">
+            <div class="triage-selected-title">
+              <span id="triage-zone-title">Chest, Heart & Lungs</span>
+            </div>
+            <span id="triage-tier-badge" class="triage-tier-badge tier-urgent">Level 1: Urgent Emergency</span>
+          </div>
+
+          <!-- Symptom checklist -->
+          <div>
+            <span class="form-label" style="display:block; margin-bottom: 0.5rem;">Reported Clinical Symptoms:</span>
+            <div id="triage-symptoms-chips" class="symptom-chips-list"></div>
+          </div>
+
+          <!-- Pain Severity Slider -->
+          <div class="pain-slider-container">
+            <div class="pain-slider-header">
+              <span>Pain & Discomfort Severity:</span>
+              <span id="pain-severity-value" class="pain-slider-val">7/10</span>
+            </div>
+            <input type="range" id="pain-severity-range" min="1" max="10" value="7" class="custom-range">
+            <div style="display: flex; justify-content: space-between; font-size: 0.7rem; color: var(--text-muted);">
+              <span>1 Mild</span>
+              <span>5 Moderate</span>
+              <span>10 Unbearable / Emergency</span>
+            </div>
+          </div>
+
+          <!-- Triage Assessment Results Box -->
+          <div class="recommendation-box">
+            <div class="rec-item">
+              <span class="rec-label">Recommended Department:</span>
+              <span id="rec-dept-name" class="rec-value" style="color: var(--lavender-300);">Cardiology & Acute CCU</span>
+            </div>
+            <div class="rec-item">
+              <span class="rec-label">Physician on Duty:</span>
+              <span id="rec-doctor-name" class="rec-value">Dr. Alistair Vance</span>
+            </div>
+            <div class="rec-item">
+              <span class="rec-label">Facility Location:</span>
+              <span id="rec-floor-loc" class="rec-value">Floor 2, Wing A (Suite 204)</span>
+            </div>
+            <div class="rec-item">
+              <span class="rec-label">Expected Triage Wait:</span>
+              <span id="rec-wait-time" class="rec-value" style="color: var(--mint-300);">2 mins (Immediate Priority)</span>
+            </div>
+          </div>
+
+          <!-- Action Buttons -->
+          <div class="rec-actions-group">
+            <button id="triage-issue-token-btn" class="btn-primary-pill" style="padding: 0.65rem 1.25rem;">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2z"/></svg>
+              Issue Token for This Dept
+            </button>
+            <button id="triage-show-map-btn" class="btn-icon-pill" style="padding: 0.65rem 1.15rem;">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/></svg>
+              Show Route on Map
+            </button>
+            <button id="triage-ask-ai-btn" class="btn-icon-pill" style="padding: 0.65rem 1.15rem;">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+              Ask AI Desk
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+         VIEW 4: Live Token Kiosk & Queue Management System
+         ========================================================================== -->
+    <section id="token-view" class="view-container hidden">
+      <div class="view-header">
+        <div class="view-header-title-wrap">
+          <h2 class="view-main-title">Live Hospital Token Kiosk & Queue Board</h2>
+          <span class="view-sub-title">Automated queue dispatching with synchronized audio chimes and voice announcements</span>
+        </div>
+      </div>
+
+      <div class="token-grid">
+        <!-- Token Dispenser Form -->
+        <div class="token-dispenser-card">
+          <h3 style="font-size: 1.1rem; font-weight: 700;">Issue Patient Token</h3>
+          <form id="token-issue-form" style="display: flex; flex-direction: column; gap: 1rem;">
+            <div class="form-group">
+              <label class="form-label">Department / Clinic:</label>
+              <select id="token-dept-select" class="form-select">
+                <option value="Cardiology">Cardiology & Heart Care</option>
+                <option value="Emergency">Emergency & Acute Trauma</option>
+                <option value="Radiology">Radiology & MRI / CT</option>
+                <option value="Orthopedics">Orthopedics & Joint Clinic</option>
+                <option value="Neurology">Neurology & Stroke Unit</option>
+                <option value="General OPD" selected>General OPD Consultation</option>
+                <option value="Pharmacy">Central Pharmacy Dispense</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Patient Name or ID:</label>
+              <input type="text" id="token-patient-name" class="form-input" placeholder="e.g. Jonathan Doe" value="Jonathan Doe" required>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Priority Tier:</label>
+              <select id="token-priority-select" class="form-select">
+                <option value="Standard" selected>Standard Appointment</option>
+                <option value="Senior Citizen">Senior Citizen (Priority Lane)</option>
+                <option value="Pediatric">Pediatric (Under 12)</option>
+                <option value="Urgent">Emergency Priority</option>
+              </select>
+            </div>
+
+            <button type="submit" class="btn-hero-primary" style="margin-top: 0.5rem; justify-content: center;">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2z"/></svg>
+              Print & Dispense Token
+            </button>
+          </form>
+
+          <!-- Printable Digital Token Slip Preview -->
+          <div class="token-preview-ticket">
+            <span class="ticket-header-small">NexusCare Hospital Kiosk</span>
+            <div id="ticket-preview-id" class="ticket-token-id">CARD-104</div>
+            <div id="ticket-preview-dept" style="font-weight: 600; color: #ffffff;">Cardiology Clinic</div>
+            <div class="ticket-meta-grid">
+              <div>Counter: <strong id="ticket-preview-room">Suite 204</strong></div>
+              <div>Est. Wait: <strong>~6 mins</strong></div>
+              <div>Type: <strong>Standard</strong></div>
+              <div>Date: <strong>Today</strong></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Live Queue Announcement Board -->
+        <div class="queue-board-card">
+          <div class="card-title-bar">
+            <div>
+              <h3 style="font-size: 1.1rem; font-weight: 700;">Live Digital Display Board</h3>
+              <span style="font-size: 0.78rem; color: var(--text-muted);">Real-time counter call synchronization</span>
+            </div>
+            <button id="token-call-next-btn" class="btn-primary-pill" title="Staff desk action: Call Next Token">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+              Call Next Patient
+            </button>
+          </div>
+
+          <!-- Large "Now Serving" Hero Banner -->
+          <div class="now-serving-hero">
+            <div>
+              <span style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--mint-300); font-weight: 700;">
+                Now Serving at Counter
+              </span>
+              <div id="now-serving-id" class="now-serving-token">CARD-104</div>
+              <div style="font-size: 0.88rem; color: var(--text-primary);">
+                Department: <strong id="now-serving-dept">Cardiology</strong>
+              </div>
+            </div>
+            <div style="text-align: right;">
+              <span style="font-size: 0.75rem; color: var(--text-muted);">Please Proceed To:</span>
+              <div id="now-serving-room" style="font-size: 1.45rem; font-weight: 800; color: #ffffff;">Suite 204</div>
+              <span class="brand-badge" style="background: rgba(52, 211, 153, 0.2); color: var(--mint-300);">Door B • Level 2</span>
+            </div>
+          </div>
+
+          <!-- Queue Table -->
+          <div>
+            <h4 style="font-size: 0.85rem; font-weight: 600; color: var(--text-secondary); margin-bottom: 0.65rem;">
+              Next In Queue (Estimated Wait Times)
+            </h4>
+            <div style="overflow-x: auto;">
+              <table class="queue-table">
+                <thead>
+                  <tr>
+                    <th>Token ID</th>
+                    <th>Department</th>
+                    <th>Room / Counter</th>
+                    <th>Est. Wait</th>
+                    <th>Priority</th>
+                  </tr>
+                </thead>
+                <tbody id="queue-table-body">
+                  <!-- Dynamically rendered -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+         VIEW 5: Interactive Hospital Map & Indoor Wayfinding
+         ========================================================================== -->
+    <section id="map-view" class="view-container hidden">
+      <div class="view-header">
+        <div class="view-header-title-wrap">
+          <h2 class="view-main-title">Interactive Architectural Hospital Map & Wayfinding</h2>
+          <span class="view-sub-title">Dynamic multi-floor hallway routing with wheelchair accessible path options</span>
+        </div>
+      </div>
+
+      <div class="map-layout-grid">
+        <!-- Navigation Controls Panel -->
+        <div class="map-control-panel">
+          <h3 style="font-size: 1.1rem; font-weight: 700;">Route Planner</h3>
+
+          <div class="form-group">
+            <label class="form-label">Starting Location:</label>
+            <select id="map-start-select" class="form-select">
+              <option value="entrance">Main Hospital Entrance & Lobby</option>
+              <option value="er_bay">Emergency Trauma Bay</option>
+              <option value="pharmacy">Central Pharmacy</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Destination:</label>
+            <select id="map-target-select" class="form-select">
+              <option value="cardiology_204" selected>Cardiology Suite 204 (Level 2)</option>
+              <option value="mri_suite">3T MRI Diagnostic Suite 2B (Level 2)</option>
+              <option value="neuro_304">Neurology Unit 304 (Level 3)</option>
+              <option value="icu_complex">Critical ICU Complex (Level 3)</option>
+              <option value="inpatient_suites">Private Suites 401-415 (Level 4)</option>
+              <option value="pharmacy">Central Pharmacy (Level 1)</option>
+              <option value="ortho_104">Orthopedics 104 (Level 1)</option>
+            </select>
+          </div>
+
+          <!-- Wheelchair Accessibility Switch -->
+          <div style="display: flex; align-items: center; justify-content: space-between; padding: 0.75rem; background: var(--bg-surface); border-radius: var(--radius-sm); border: 1px solid var(--border-subtle);">
+            <div style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.82rem;">
+              <span>♿ Wheelchair Route</span>
+            </div>
+            <input type="checkbox" id="map-accessible-toggle" style="cursor: pointer;">
+          </div>
+
+          <!-- Turn by turn step instructions -->
+          <div>
+            <span class="form-label" style="display:block; margin-bottom: 0.5rem;">Turn-by-Turn Guidance:</span>
+            <div id="route-steps-list" class="route-steps-container"></div>
+          </div>
+        </div>
+
+        <!-- Architectural Blueprint Canvas -->
+        <div class="map-view-canvas-wrap">
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.75rem; flex-wrap: wrap; gap: 0.5rem;">
+            <div class="floor-tabs-bar">
+              <button class="floor-tab-btn" data-floor="1">Floor 1 (Ground / ER)</button>
+              <button class="floor-tab-btn active" data-floor="2">Floor 2 (Cardiology / MRI)</button>
+              <button class="floor-tab-btn" data-floor="3">Floor 3 (ICU / Surgery)</button>
+              <button class="floor-tab-btn" data-floor="4">Floor 4 (Pavilion / Suites)</button>
+            </div>
+            <span id="map-floor-title" style="font-size: 0.78rem; color: var(--lavender-300); font-weight: 600;">
+              Level 2: Diagnostic Imaging, Cath Lab & Cardiology Suite
+            </span>
+          </div>
+
+          <div id="hospital-map-svg-container"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+         VIEW 6: NexusCare AI Desk & Customer Care
+         ========================================================================== -->
+    <section id="aidesk-view" class="view-container hidden">
+      <div class="view-header">
+        <div class="view-header-title-wrap">
+          <h2 class="view-main-title">NexusCare AI Care Desk & Concierge</h2>
+          <span class="view-sub-title">24/7 intelligent triage support, directions, medication guidance, and patient assistance</span>
+        </div>
+      </div>
+
+      <div class="aidesk-container">
+        <div class="aidesk-header">
+          <div style="display: flex; align-items: center; gap: 0.65rem;">
+            <div class="brand-icon-box" style="width: 32px; height: 32px;">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a2 2 0 0 1 2 2v2a2 2 0 0 1-2 2 2 2 0 0 1-2-2V4a2 2 0 0 1 2-2z"/><rect x="4" y="8" width="16" height="12" rx="2"/></svg>
+            </div>
+            <div>
+              <div style="font-size: 0.95rem; font-weight: 700; color: #ffffff;">NexusCare AI Clinical Desk</div>
+              <div style="font-size: 0.72rem; color: var(--mint-300);">Online • Connected to EHR & Triage Grid</div>
+            </div>
+          </div>
+          <span class="brand-badge">HIPAA Compliant</span>
+        </div>
+
+        <!-- Chat messages scroll -->
+        <div id="aidesk-messages-list" class="aidesk-messages-scroll">
+          <div class="chat-bubble bubble-ai">
+            Welcome to NexusCare Intelligence Desk. I can assist with emergency triage, room wayfinding, queue status, or patient registration. How can I help you right now?
+          </div>
+        </div>
+
+        <!-- Quick suggestion prompt pills -->
+        <div class="chat-quick-suggestions">
+          <button class="quick-chip ai-quick-chip" data-prompt="Where is the emergency room and what is current wait time?">🚨 ER Wait Time</button>
+          <button class="quick-chip ai-quick-chip" data-prompt="I have sudden chest tightness and shortness of breath.">🫀 Chest Pain Triage</button>
+          <button class="quick-chip ai-quick-chip" data-prompt="Where is the main pharmacy to collect discharge medicines?">💊 Pharmacy Directions</button>
+          <button class="quick-chip ai-quick-chip" data-prompt="Can I request a wheelchair escort for an elderly patient?">♿ Wheelchair Escort</button>
+          <button class="quick-chip ai-quick-chip" data-prompt="What are visiting hours for the ICU on Level 3?">🕒 ICU Visiting Hours</button>
+        </div>
+
+        <!-- Input bar -->
+        <div class="aidesk-input-bar">
+          <input type="text" id="aidesk-input" class="aidesk-text-input" placeholder="Type clinical symptom or question (e.g. 'How do I reach MRI suite?')...">
+          <button id="aidesk-send-btn" class="btn-primary-pill" style="padding: 0.75rem 1.25rem;">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+            Send
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+         VIEW 7: Bed Management Matrix
+         ========================================================================== -->
+    <section id="beds-view" class="view-container hidden">
+      <div class="view-header">
+        <div class="view-header-title-wrap">
+          <h2 class="view-main-title">Live Bed Allocation & Ward Matrix</h2>
+          <span class="view-sub-title">Real-time occupancy status across ICU, Emergency, Cardiology, and Inpatient Pavilions</span>
+        </div>
+        <div style="display: flex; gap: 0.75rem; font-size: 0.8rem;">
+          <span style="display: flex; align-items: center; gap: 4px;"><span class="bed-status-indicator status-occupied"></span> Occupied</span>
+          <span style="display: flex; align-items: center; gap: 4px;"><span class="bed-status-indicator status-available"></span> Available</span>
+          <span style="display: flex; align-items: center; gap: 4px;"><span class="bed-status-indicator status-cleaning"></span> Cleaning</span>
+        </div>
+      </div>
+
+      <div id="bed-matrix-grid-container" class="bed-matrix-grid"></div>
+    </section>
+
+    <!-- ==========================================================================
+         Fixed Horizontal Bottom Navigation Dock
+         ========================================================================== -->
+    <nav class="bottom-dock-container" aria-label="Main Navigation">
+      <button class="dock-item-btn" data-view="dashboard" title="Operations Dashboard">
+        <svg class="dock-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="3" y="3" width="7" height="7"/>
+          <rect x="14" y="3" width="7" height="7"/>
+          <rect x="14" y="14" width="7" height="7"/>
+          <rect x="3" y="14" width="7" height="7"/>
+        </svg>
+        <span>Dashboard</span>
+      </button>
+
+      <button class="dock-item-btn" data-view="triage" title="Body Symptom Checker">
+        <svg class="dock-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+        </svg>
+        <span>Body Triage</span>
+      </button>
+
+      <button class="dock-item-btn" data-view="tokens" title="Token Kiosk & Queue Board">
+        <svg class="dock-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2z"/>
+        </svg>
+        <span>Token Kiosk</span>
+      </button>
+
+      <button class="dock-item-btn" data-view="map" title="Hospital Map & Wayfinding">
+        <svg class="dock-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/>
+          <line x1="8" y1="2" x2="8" y2="18"/>
+          <line x1="16" y1="6" x2="16" y2="22"/>
+        </svg>
+        <span>Hospital Map</span>
+      </button>
+
+      <button class="dock-item-btn" data-view="aidesk" title="AI Care Concierge">
+        <svg class="dock-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M12 2a2 2 0 0 1 2 2v2a2 2 0 0 1-2 2 2 2 0 0 1-2-2V4a2 2 0 0 1 2-2z"/>
+          <rect x="4" y="8" width="16" height="12" rx="2"/>
+        </svg>
+        <span>AI Desk</span>
+      </button>
+
+      <button class="dock-item-btn" data-view="beds" title="Bed Capacity Grid">
+        <svg class="dock-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M2 4v16M2 8h18a2 2 0 0 1 2 2v10M2 17h20M6 8v9"/>
+        </svg>
+        <span>Bed Matrix</span>
+      </button>
+    </nav>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
